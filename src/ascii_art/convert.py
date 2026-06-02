@@ -23,26 +23,30 @@ def _pix(top: np.ndarray, bot: np.ndarray, *, mode: ColourSpace) -> str:
 
     # Currently, small mode does not accept alpha.
     # So we normalise alpha values to either completely opaque or completely transparent
-    fg_a = 1 if fg_a else 0
-    bg_a = 1 if bg_a else 0
+    # We round them to either full (1) or none (0)
+    fg_opaque = fg_a > 127
+    bg_opaque = bg_a > 127
 
-    # If the top is transparent (not used), we:
-    #   - swap the char being used from '▀' to '▄'
-    #   - swap the background and foreground colours
-    # If both the top and bottom are transparent, return an empty space.
+    # Now run through each possible case:
 
-    if not fg_a:
-        if not bg_a:
-            return f'{RESET} '
-        (fg_r, fg_g, fg_b, fg_a), (bg_r, bg_g, bg_b, bg_a) = (bg_r, bg_g, bg_b, bg_a), (fg_r, fg_g, fg_b, fg_a)
-        char = '▄'
-    else:
-        char = '▀'
+    # Both fully transparent
+    if not fg_opaque and not bg_opaque:
+        return f'{RESET} '
 
+    # Top transparent, bottom opaque
+    if not fg_opaque and bg_opaque:
+        fg_colstr = _gen_col_code(bg_r, bg_g, bg_b, mode=mode)
+        return f'{RESET}{fg_colstr}▄{RESET}'
+
+    # Top opaque, bottom transparent
+    if fg_opaque and not bg_opaque:
+        fg_colstr = _gen_col_code(fg_r, fg_g, fg_b, mode=mode)
+        return f'{RESET}{fg_colstr}▀{RESET}'
+
+    # Both fully opaque
     fg_colstr = _gen_col_code(fg_r, fg_g, fg_b, mode=mode)
     bg_colstr = _gen_col_code(bg_r, bg_g, bg_b, mode=mode, bg=True)
-    colstr = fg_colstr + bg_colstr
-    return f'{colstr}{char}{RESET}'
+    return f'{fg_colstr}{bg_colstr}▀{RESET}'
 
 def _convert(img: np.ndarray, *, mode: ColourSpace) -> str:
     height, width, _ = img.shape
