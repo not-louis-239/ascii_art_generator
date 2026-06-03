@@ -17,3 +17,7 @@ the output may or may not print correctly. Hence, it is also not recommended to 
 
 - Python 3.x (tested on 3.14, older versions may or may not work)
 - For futher dependencies, run: `pip install -r requirements.txt`
+
+## Licence
+
+Licenced under the Apache 2.0 Licence. See [LICENCE](./LICENCE) for more information.
