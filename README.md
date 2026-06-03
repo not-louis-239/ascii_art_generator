@@ -1,5 +1,7 @@
 # ASCII Art Generator
 
+**NOTE**: This repository has been archived and is no longer being actively maintained. Please visit `github.com/not-louis-239/toolbox`, as this project is now part of that monorepo, and is being maintained there instead, under the GNU General Public License 3 (GPLv3) license.
+
 This project uses Python to accept an image path and convert it to a script that prints terminal art, using `▀`, `▄` and escape codes to handle transparency to ensure proper display inside the terminal.
 
 This is mostly a utility for making pixel art that can be printed in the terminal. Depending on:
